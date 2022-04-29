@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "${id}",
+  "version": "${version}",
+  "name": "${name}",
+  "description": "Elegant Library for specific projects of Intelligent Creations",
+  "authors": [
+    "pkstDev"
+  ],
+  "license": "MIT License",
+  "icon": "assets/mudrock/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.intelligentcreations.mudrock.Mudrock"
+    ]
+  },
+  "mixins": [
+    "mudrock.mixins.json"
+  ],
+  "depends": {
+    "java": ">=17",
+    "minecraft": "1.18.x",
+    "fabricloader": ">=0.11.3",
+    "fabric": "*"
+  },
+  "suggests": {
+    "modmenu": "*"
+  }
+}

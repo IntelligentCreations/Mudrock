@@ -1,0 +1,137 @@
+plugins {
+    id 'java'
+    id 'checkstyle'
+    id 'maven-publish'
+    id 'com.modrinth.minotaur' version '2.1.1'
+    id 'fabric-loom' version '0.12-SNAPSHOT'
+}
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'checkstyle'
+    apply plugin: 'fabric-loom'
+
+    group = project.maven_group
+    version = project.mod_version
+    archivesBaseName = "${project.mod_id}-mc${project.minecraft_version}"
+
+    sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
+
+    // Declare dependencies
+    dependencies {
+        // Fabric
+        minecraft "com.mojang:minecraft:${project.minecraft_version}"
+        mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+        modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+        // Mods
+        modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+        modImplementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
+
+        // Code Quality
+        compileOnly "org.jetbrains:annotations:${project.jetbrains_annotations_version}"
+        testImplementation "org.junit.jupiter:junit-jupiter-api:${project.junit_jupiter_version}"
+        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${project.junit_jupiter_version}"
+
+        // Subprojects
+        subprojects.each {
+            implementation project(path: ":${it.name}", configuration: 'namedElements')
+            include project("${it.name}:") // nest within distribution
+        }
+    }
+
+    // Produce a sources distribution
+    java {
+        withSourcesJar()
+    }
+
+    // Add the licence to all distributions
+    tasks.withType(Jar).configureEach {
+        it.from rootProject.file('LICENSE.txt')
+    }
+
+    // Process any resources
+    processResources {
+        inputs.property 'id', project.mod_id
+        inputs.property 'name', project.mod_name
+        inputs.property 'version', project.version
+
+        // fabric.mod.json
+        filesMatching('fabric.mod.json') {
+            expand(['id': project.mod_id, 'name': project.mod_name, 'version': project.version])
+        }
+    }
+
+    // Perform linting using Checkstyle
+    checkstyle {
+        configFile rootProject.file('.checkstyle.xml')
+        toolVersion project.checkstyle_version
+    }
+
+    // Add any additional repositories
+    repositories {
+        mavenCentral()
+        maven { name 'Fabric'; url 'https://maven.fabricmc.net/' }
+        maven { name 'TerraformersMC'; url 'https://maven.terraformersmc.com/' }
+    }
+}
+
+// Define how artifacts are published to Modrinth (https://modrinth.com)
+import com.modrinth.minotaur.dependencies.ModDependency
+modrinth {
+    // Set the API token from the environment
+    token = System.getenv('MODRINTH_TOKEN') ?: ''
+    // Set whether debug mode is enabled
+    debugMode = System.getenv('MODRINTH_DEBUG') as boolean ?: false
+    // Set the project id
+    projectId = project.mr_project_id
+    // Set the release name
+    versionName = "${project.mod_name} v${project.version} for Minecraft ${project.minecraft_version}"
+    // Set the release type
+    versionType = project.version.contains('alpha') ? 'alpha' : project.version.contains('beta') ? 'beta' : 'release'
+    // Set the release version
+    versionNumber = project.version
+    // Set the release notes
+    changelog = "For a list of changes, please refer to https://github.com/${project.github_repo}/releases/tag/v${project.version}"
+    // Add all supported mod loaders
+    loaders = ['fabric']
+    // Add all supported game versions
+    project.mr_game_versions.split(', ').each { gameVersions.add it }
+    // Add the main artifact
+    uploadFile = remapJar
+    // Add any additional artifacts
+    additionalFiles.add sourcesJar
+    additionalFiles.add jar
+    subprojects.each {
+        additionalFiles.add it.remapJar
+        additionalFiles.add it.sourcesJar
+        additionalFiles.add it.jar
+    }
+    // Add any dependencies
+    if (project.mr_relations_required) dependencies.addAll project.mr_relations_required.split(', ').collect { new ModDependency(it, 'required') }
+    if (project.mr_relations_optional) dependencies.addAll project.mr_relations_optional.split(', ').collect { new ModDependency(it, 'optional') }
+    if (project.mr_relations_incompatible) dependencies.addAll project.mr_relations_incompatible.split(', ').collect { new ModDependency(it, 'incompatible') }
+}
+
+// Define how packages are published
+publishing {
+    // Declare all publications
+    publications {
+        mavenJava(MavenPublication) { from components.java }
+    }
+
+    // Add repositories to publish to
+    repositories {
+        // GitHub Packages (https://pkg.github.com)
+        maven {
+            name 'GitHub'
+            url "https://maven.pkg.github.com/${project.github_repo}"
+            credentials {
+                username System.getenv('GITHUB_ACTOR')
+                password System.getenv('GITHUB_TOKEN')
+            }
+        }
+    }
+}
+
+publish.finalizedBy tasks.modrinth
