@@ -24,8 +24,7 @@ public class ItemStackMixin
             {
                 if (MudrockEventHandler.getListeners().get(i) instanceof ItemUseListener listener)
                 {
-                    listener.onItemUse(world, user, hand);
-                    cir.setReturnValue(TypedActionResult.success(user.getMainHandStack()));
+                    cir.setReturnValue(listener.onItemUse(world, user, hand));
                 }
             }
         }
