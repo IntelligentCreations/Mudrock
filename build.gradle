@@ -6,74 +6,62 @@ plugins {
     id 'fabric-loom' version '0.12-SNAPSHOT'
 }
 
-allprojects {
-    apply plugin: 'java'
-    apply plugin: 'checkstyle'
-    apply plugin: 'fabric-loom'
+apply plugin: 'java'
+apply plugin: 'checkstyle'
+apply plugin: 'fabric-loom'
 
-    group = project.maven_group
-    version = project.mod_version
-    archivesBaseName = "${project.mod_id}-mc${project.minecraft_version}"
+group = project.maven_group
+version = project.mod_version
+archivesBaseName = "${project.mod_id}-mc${project.minecraft_version}"
 
-    sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
 
     // Declare dependencies
-    dependencies {
-        // Fabric
-        minecraft "com.mojang:minecraft:${project.minecraft_version}"
-        mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-        modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+dependencies {
+    // Fabric
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-        // Mods
-        modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-        modImplementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
+    // Mods
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    modImplementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
 
-        // Code Quality
-        compileOnly "org.jetbrains:annotations:${project.jetbrains_annotations_version}"
-        testImplementation "org.junit.jupiter:junit-jupiter-api:${project.junit_jupiter_version}"
-        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${project.junit_jupiter_version}"
-
-        // Subprojects
-        subprojects.each {
-            implementation project(path: ":${it.name}", configuration: 'namedElements')
-            include project("${it.name}:") // nest within distribution
-        }
-    }
+    // Code Quality
+    compileOnly "org.jetbrains:annotations:${project.jetbrains_annotations_version}"
+}
 
     // Produce a sources distribution
-    java {
-        withSourcesJar()
-    }
+java {
+    withSourcesJar()
+}
 
     // Add the licence to all distributions
-    tasks.withType(Jar).configureEach {
-        it.from rootProject.file('LICENSE.txt')
-    }
+tasks.withType(Jar).configureEach {
+    it.from rootProject.file('LICENSE.txt')
+}
 
     // Process any resources
-    processResources {
-        inputs.property 'id', project.mod_id
-        inputs.property 'name', project.mod_name
-        inputs.property 'version', project.version
-
-        // fabric.mod.json
-        filesMatching('fabric.mod.json') {
-            expand(['id': project.mod_id, 'name': project.mod_name, 'version': project.version])
-        }
+processResources {
+    inputs.property 'id', project.mod_id
+    inputs.property 'name', project.mod_name
+    inputs.property 'version', project.version
+    filesMatching('fabric.mod.json') {
+        expand(['id': project.mod_id, 'name': project.mod_name, 'version': project.version])
     }
+}
 
     // Perform linting using Checkstyle
-    checkstyle {
-        configFile rootProject.file('.checkstyle.xml')
-        toolVersion project.checkstyle_version
-    }
+checkstyle {
+    configFile rootProject.file('.checkstyle.xml')
+    toolVersion project.checkstyle_version
+}
 
     // Add any additional repositories
-    repositories {
-        mavenCentral()
-        maven { name 'Fabric'; url 'https://maven.fabricmc.net/' }
-        maven { name 'TerraformersMC'; url 'https://maven.terraformersmc.com/' }
-    }
+repositories {
+    mavenCentral()
+    maven { name 'Fabric'; url 'https://maven.fabricmc.net/' }
+    maven { name 'TerraformersMC'; url 'https://maven.terraformersmc.com/' }
 }
 
 // Define how artifacts are published to Modrinth (https://modrinth.com)
@@ -92,7 +80,7 @@ modrinth {
     // Set the release version
     versionNumber = project.version
     // Set the release notes
-    changelog = "For a list of changes, please refer to https://github.com/${project.github_repo}/releases/tag/v${project.version}"
+    changelog = "For a list of changes, please refer to https://github.com/${project.github_repo}/releases/tag/${project.version}"
     // Add all supported mod loaders
     loaders = ['fabric']
     // Add all supported game versions

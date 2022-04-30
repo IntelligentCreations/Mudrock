@@ -27,6 +27,8 @@ public class MudrockRegistry
     private List<Identifier> blockIdentifierList = new ArrayList<>();
     private List<Block> blockList = new ArrayList<>();
 
+    private static int loadedRegistryCount = 0;
+
     public MudrockRegistry(String namespace, String name, ItemGroup group)
     {
         this.namespace = namespace;
@@ -77,10 +79,15 @@ public class MudrockRegistry
             Registry.register(Registry.BLOCK, blockIdentifierList.get(i), blockList.get(i));
             Registry.register(Registry.ITEM, blockIdentifierList.get(i), new BlockItem(blockList.get(i), new FabricItemSettings().group(group)));
         }
+        loadedRegistryCount = loadedRegistryCount + 1;
         // Refresh the lists
         this.itemIdentifierList = new ArrayList<>();
         this.itemList = new ArrayList<>();
         this.blockIdentifierList = new ArrayList<>();
         this.blockList = new ArrayList<>();
+    }
+
+    public static int getLoadedRegistryCount() {
+        return loadedRegistryCount;
     }
 }
