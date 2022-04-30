@@ -17,8 +17,8 @@ versions of [Minecraft][minecraft] Java Edition.
 
 ## Features
 
-* A simple registry system for creating multiple simple items and blocks
-* Basic event listeners
+* A simple registry system for creating multiple simple items and blocks.
+* Basic event listeners. ~~*We like Mixin, but the less Mixin, the better, right?*~~
 
 ## Contributing
 

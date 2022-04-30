@@ -1,7 +1,9 @@
 package dev.intelligentcreations.mudrock.event;
 
+import dev.intelligentcreations.mudrock.Mudrock;
 import dev.intelligentcreations.mudrock.event.listeners.MudrockEventListener;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,9 +22,18 @@ public class MudrockEventHandler
      * Register a listener.
      * The listener must implement one of the interfaces that extends {@link MudrockEventListener}.
      */
-    public void registerListener(MudrockEventListener listener)
+    public static <T extends MudrockEventListener> void registerListener(Class<T> listenerClass)
     {
-        listeners.add(listener);
+        try
+        {
+            T listener = listenerClass.getDeclaredConstructor().newInstance();
+            listeners.add(listener);
+            Mudrock.LOGGER.info("Registered listener " + listenerClass.getName());
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e)
+        {
+            e.printStackTrace();
+            throw new RuntimeException("No valid constructor found for: " + listenerClass.getName());
+        }
     }
 
     /**
