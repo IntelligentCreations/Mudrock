@@ -17,8 +17,8 @@ versions of [Minecraft][minecraft] Java Edition.
 
 ## Features
 
-* A simple registry system
-* ~~Event listeners~~ *Not Yet Implemented*
+* A simple registry system for creating multiple simple items and blocks
+* Basic event listeners
 
 ## Contributing
 

@@ -8,14 +8,17 @@ import net.minecraft.util.Identifier;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MudrockStoneRegistry extends MudrockRegistry {
+// WIP
+public class MudrockStoneRegistry extends MudrockRegistry
+{
     private final String namespace;
     private final String name;
     private final ItemGroup group;
     private List<Identifier> itemIdentifierList = new ArrayList<>();
     private List<Item> itemList = new ArrayList<>();
 
-    public MudrockStoneRegistry(String namespace, String name, ItemGroup group) {
+    public MudrockStoneRegistry(String namespace, String name, ItemGroup group)
+    {
         super(namespace, name, group);
         this.namespace = namespace;
         this.name = name;

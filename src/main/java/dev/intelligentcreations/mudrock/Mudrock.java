@@ -5,11 +5,13 @@ import org.apache.logging.log4j.Logger;
 
 import net.fabricmc.api.ModInitializer;
 
-public class Mudrock implements ModInitializer {
+public class Mudrock implements ModInitializer 
+{
     public static final Logger LOGGER = LogManager.getLogger("Mudrock");
 
     @Override
-    public void onInitialize() {
+    public void onInitialize() 
+    {
         LOGGER.info("Mudrock is getting ready...");
     }
 }
