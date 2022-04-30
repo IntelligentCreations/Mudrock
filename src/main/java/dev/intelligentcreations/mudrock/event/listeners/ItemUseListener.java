@@ -4,7 +4,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
-public interface ItemUseListener
+/**
+ * Creates an event listener that listens to the use of items.
+ * Implement this class to add your functions.
+ */
+public interface ItemUseListener extends MudrockEventListener
 {
     void onItemUse(World world, PlayerEntity user, Hand hand);
 }

@@ -102,7 +102,6 @@
     <!-- See https://checkstyle.org/config_naming.html -->
     <module name="CatchParameterName"/>
     <module name="ClassTypeParameterName"/>
-    <module name="ConstantName"/>
     <module name="IllegalIdentifierName"/>
     <module name="InterfaceTypeParameterName"/>
     <module name="LambdaParameterName"/>
@@ -122,7 +121,6 @@
     <!-- Checks for Javadoc comments                    -->
     <!-- See https://checkstyle.org/config_javadoc.html -->
     <module name="InvalidJavadocPosition"/>
-    <module name="JavadocMethod"/>
     <module name="JavadocParagraph"/>
     <module name="JavadocStyle"/>
     <module name="JavadocType"/>
@@ -136,7 +134,7 @@
     <!-- See https://checkstyle.org/config_whitespace.html -->
     <module name="EmptyForIteratorPad"/>
     <module name="EmptyLineSeparator">
-      <property name="allowMultipleEmptyLines" value="false"/>
+      <property name="allowMultipleEmptyLines" value="true"/>
       <property name="allowNoEmptyLineBetweenFields" value="true"/>
     </module>
     <module name="GenericWhitespace"/>

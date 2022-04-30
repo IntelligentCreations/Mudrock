@@ -1,6 +1,7 @@
 package dev.intelligentcreations.mudrock.mixin;
 
 import dev.intelligentcreations.mudrock.event.MudrockEventHandler;
+import dev.intelligentcreations.mudrock.event.listeners.ItemUseListener;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
@@ -17,12 +18,15 @@ public class ItemStackMixin
     @Inject(method = "use", at = @At("RETURN"), cancellable = true)
     public void onUse(World world, PlayerEntity user, Hand hand, CallbackInfoReturnable<TypedActionResult<ItemStack>> cir)
     {
-        if (!MudrockEventHandler.itemUseListeners.isEmpty())
+        if (!MudrockEventHandler.getListeners().isEmpty())
         {
-            for (int i = 0; i < MudrockEventHandler.itemUseListeners.size(); ++i)
+            for (int i = 0; i < MudrockEventHandler.getListeners().size(); ++i)
             {
-                MudrockEventHandler.itemUseListeners.get(i).onItemUse(world, user, hand);
-                cir.setReturnValue(TypedActionResult.success(user.getMainHandStack()));
+                if (MudrockEventHandler.getListeners().get(i) instanceof ItemUseListener listener)
+                {
+                    listener.onItemUse(world, user, hand);
+                    cir.setReturnValue(TypedActionResult.success(user.getMainHandStack()));
+                }
             }
         }
     }

@@ -1,28 +1,42 @@
 package dev.intelligentcreations.mudrock.event;
 
-import dev.intelligentcreations.mudrock.event.listeners.BlockSteppedOnListener;
-import dev.intelligentcreations.mudrock.event.listeners.ItemUseListener;
+import dev.intelligentcreations.mudrock.event.listeners.MudrockEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Event handler for all Mudrock events.
+ */
 public class MudrockEventHandler
 {
-    public static List<ItemUseListener> itemUseListeners = new ArrayList<>();
-    public static List<BlockSteppedOnListener> blockSteppedOnListeners = new ArrayList<>();
+    /**
+     * The list of listeners.
+     * To get the list of listeners, use the getter.
+     */
+    private static final List<MudrockEventListener> listeners = new ArrayList<>();
 
-    public void registerListener(ItemUseListener listener)
+    /**
+     * Register a listener.
+     * The listener must implement one of the interfaces that extends {@link MudrockEventListener}.
+     */
+    public void registerListener(MudrockEventListener listener)
     {
-        itemUseListeners.add(listener);
+        listeners.add(listener);
     }
 
-    public void registerListener(BlockSteppedOnListener listener)
-    {
-        blockSteppedOnListeners.add(listener);
-    }
-
+    /**
+     * Get the number of the loaded listeners.
+     */
     public static int getListenerCount()
     {
-        return itemUseListeners.size() + blockSteppedOnListeners.size();
+        return listeners.size();
+    }
+
+    /**
+     * Get the list of the loaded listeners.
+     */
+    public static List<MudrockEventListener> getListeners() {
+        return listeners;
     }
 }
