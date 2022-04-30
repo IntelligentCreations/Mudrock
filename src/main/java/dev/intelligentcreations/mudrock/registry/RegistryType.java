@@ -1,6 +1,6 @@
 package dev.intelligentcreations.mudrock.registry;
 
-public enum RegistryType 
+public enum RegistryType
 {
     METAL,
     WOOD,

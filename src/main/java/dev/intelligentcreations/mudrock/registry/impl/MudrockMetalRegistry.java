@@ -47,16 +47,16 @@ public class MudrockMetalRegistry extends MudrockRegistry
         this.group = group;
     }
 
-    public MudrockMetalRegistry with(String name_1)
+    public MudrockMetalRegistry with(String subName)
     {
-        this.itemIdentifierList.add(new Identifier(namespace, this.name + "_" + name_1));
+        this.itemIdentifierList.add(new Identifier(namespace, this.name + "_" + subName));
         this.itemList.add(new Item(new FabricItemSettings().group(group)));
         return this;
     }
 
-    public MudrockMetalRegistry withBlock(String name_1, Material material, float hardness)
+    public MudrockMetalRegistry withBlock(String subName, Material material, float hardness)
     {
-        this.blockIdentifierList.add(new Identifier(namespace, this.name + "_" + name_1));
+        this.blockIdentifierList.add(new Identifier(namespace, this.name + "_" + subName));
         this.blockList.add(new Block(FabricBlockSettings.of(material).hardness(hardness)));
         return this;
     }

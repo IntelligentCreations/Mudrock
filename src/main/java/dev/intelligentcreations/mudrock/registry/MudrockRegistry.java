@@ -36,12 +36,13 @@ public class MudrockRegistry
 
     public static MudrockRegistry create(String namespace, String name, ItemGroup group, RegistryType type)
     {
-        MudrockRegistry reg = new MudrockRegistry(namespace, name, group);
+        MudrockRegistry reg;
         switch (type) {
             case METAL -> reg = new MudrockMetalRegistry(namespace, name, group);
             case GEM -> reg = new MudrockGemRegistry(namespace, name, group);
             case WOOD -> reg = new MudrockWoodRegistry(namespace, name, group);
             case STONE -> reg = new MudrockStoneRegistry(namespace, name, group);
+            default -> reg = new MudrockRegistry(namespace, name, group);
         }
         return reg;
     }
@@ -51,16 +52,16 @@ public class MudrockRegistry
         return new MudrockRegistry(namespace, name, group);
     }
 
-    public MudrockRegistry with(String name_1)
+    public MudrockRegistry with(String subName)
     {
-        this.itemIdentifierList.add(new Identifier(namespace, this.name + "_" + name_1));
+        this.itemIdentifierList.add(new Identifier(namespace, this.name + "_" + subName));
         this.itemList.add(new Item(new FabricItemSettings().group(group)));
         return this;
     }
 
-    public MudrockRegistry withBlock(String name_1, Material material, float hardness)
+    public MudrockRegistry withBlock(String subName, Material material, float hardness)
     {
-        this.blockIdentifierList.add(new Identifier(namespace, this.name + "_" + name_1));
+        this.blockIdentifierList.add(new Identifier(namespace, this.name + "_" + subName));
         this.blockList.add(new Block(FabricBlockSettings.of(material).hardness(hardness)));
         return this;
     }
