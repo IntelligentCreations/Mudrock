@@ -1,125 +1,51 @@
 plugins {
-    id 'java'
-    id 'checkstyle'
-    id 'maven-publish'
-    id 'com.modrinth.minotaur' version '2.1.1'
-    id 'fabric-loom' version '0.12-SNAPSHOT'
+    id "architectury-plugin" version "3.4-SNAPSHOT"
+    id "dev.architectury.loom" version "0.11.0-SNAPSHOT" apply false
 }
 
-apply plugin: 'java'
-apply plugin: 'checkstyle'
-apply plugin: 'fabric-loom'
-
-group = project.maven_group
-version = project.mod_version
-archivesBaseName = "${project.mod_id}-mc${project.minecraft_version}"
-
-sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
-
-    // Declare dependencies
-dependencies {
-    // Fabric
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
-    // Mods
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modImplementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
-
-    // Code Quality
-    compileOnly "org.jetbrains:annotations:${project.jetbrains_annotations_version}"
+architectury {
+    minecraft = rootProject.minecraft_version
 }
 
-    // Produce a sources distribution
-java {
-    withSourcesJar()
-}
+subprojects {
+    apply plugin: "dev.architectury.loom"
 
-    // Add the licence to all distributions
-tasks.withType(Jar).configureEach {
-    it.from rootProject.file('LICENSE.txt')
-}
+    loom {
+        // silentMojangMappingsLicense()
+    }
 
-    // Process any resources
-processResources {
-    inputs.property 'id', project.mod_id
-    inputs.property 'name', project.mod_name
-    inputs.property 'version', project.version
-    filesMatching('fabric.mod.json') {
-        expand(['id': project.mod_id, 'name': project.mod_name, 'version': project.version])
+    dependencies {
+        minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+        // The following line declares the mojmap mappings, you may use other mappings as well
+        // mappings loom.officialMojangMappings()
+        // The following line declares the yarn mappings you may select this one as well.
+        mappings "net.fabricmc:yarn:1.18.2+build.3:v2"
     }
 }
 
-    // Perform linting using Checkstyle
-checkstyle {
-    configFile rootProject.file('.checkstyle.xml')
-    toolVersion project.checkstyle_version
-}
+allprojects {
+    apply plugin: "java"
+    apply plugin: "architectury-plugin"
+    apply plugin: "maven-publish"
 
-    // Add any additional repositories
-repositories {
-    mavenCentral()
-    maven { name 'Fabric'; url 'https://maven.fabricmc.net/' }
-    maven { name 'TerraformersMC'; url 'https://maven.terraformersmc.com/' }
-}
+    archivesBaseName = rootProject.archives_base_name
+    version = rootProject.mod_version
+    group = rootProject.maven_group
 
-// Define how artifacts are published to Modrinth (https://modrinth.com)
-import com.modrinth.minotaur.dependencies.ModDependency
-modrinth {
-    // Set the API token from the environment
-    token = System.getenv('MODRINTH_TOKEN') ?: ''
-    // Set whether debug mode is enabled
-    debugMode = System.getenv('MODRINTH_DEBUG') as boolean ?: false
-    // Set the project id
-    projectId = project.mr_project_id
-    // Set the release name
-    versionName = "${project.mod_name} v${project.version} for Minecraft ${project.minecraft_version}"
-    // Set the release type
-    versionType = project.version.contains('alpha') ? 'alpha' : project.version.contains('beta') ? 'beta' : 'release'
-    // Set the release version
-    versionNumber = project.version
-    // Set the release notes
-    changelog = "For a list of changes, please refer to https://github.com/${project.github_repo}/releases/tag/${project.version}"
-    // Add all supported mod loaders
-    loaders = ['fabric']
-    // Add all supported game versions
-    project.mr_game_versions.split(', ').each { gameVersions.add it }
-    // Add the main artifact
-    uploadFile = remapJar
-    // Add any additional artifacts
-    additionalFiles.add sourcesJar
-    additionalFiles.add jar
-    subprojects.each {
-        additionalFiles.add it.remapJar
-        additionalFiles.add it.sourcesJar
-        additionalFiles.add it.jar
-    }
-    // Add any dependencies
-    if (project.mr_relations_required) dependencies.addAll project.mr_relations_required.split(', ').collect { new ModDependency(it, 'required') }
-    if (project.mr_relations_optional) dependencies.addAll project.mr_relations_optional.split(', ').collect { new ModDependency(it, 'optional') }
-    if (project.mr_relations_incompatible) dependencies.addAll project.mr_relations_incompatible.split(', ').collect { new ModDependency(it, 'incompatible') }
-}
-
-// Define how packages are published
-publishing {
-    // Declare all publications
-    publications {
-        mavenJava(MavenPublication) { from components.java }
-    }
-
-    // Add repositories to publish to
     repositories {
-        // GitHub Packages (https://pkg.github.com)
-        maven {
-            name 'GitHub'
-            url "https://maven.pkg.github.com/${project.github_repo}"
-            credentials {
-                username System.getenv('GITHUB_ACTOR')
-                password System.getenv('GITHUB_TOKEN')
-            }
-        }
+        // Add repositories to retrieve artifacts from in here.
+        // You should only use this when depending on other mods because
+        // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
+        // See https://docs.gradle.org/current/userguide/declaring_repositories.html
+        // for more information about repositories.
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+        options.release = 17
+    }
+
+    java {
+        withSourcesJar()
     }
 }
-
-publish.finalizedBy tasks.modrinth

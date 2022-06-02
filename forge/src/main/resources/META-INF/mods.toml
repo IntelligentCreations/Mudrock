@@ -1,0 +1,35 @@
+modLoader = "javafml"
+loaderVersion = "[40,)"
+#issueTrackerURL = ""
+license = "MIT License"
+
+[[mods]]
+modId = "mudrock"
+version = "${version}"
+displayName = "Mudrock"
+authors = "pkstDev"
+description = '''
+Elegant library for specific projects of Intelligent Creations
+'''
+logoFile = "icon.png"
+
+[[dependencies.mudrock]]
+modId = "forge"
+mandatory = true
+versionRange = "[40,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.mudrock]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.18.2,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.mudrock]]
+modId = "architectury"
+mandatory = true
+versionRange = "[4.4.59,)"
+ordering = "AFTER"
+side = "BOTH"

@@ -1,59 +1,19 @@
-### project
-
-### fabric
-
-# runtime
+build/
+*.ipr
 run/
-
-### java
-
-# compiled classes
-*.class
-
-# log files
-*.log
-
-# packaged files
-*.ear
-*.jar
-*.nar
-*.rar
-*.tar.gz
-*.war
-*.zip
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-
-### gradle
-
-.gradle/
-
-# build
-**/build/
-!src/**/build/
-
-# wrapper
-!gradle-wrapper.jar
-!gradle-wrapper.properties
-
-### jetbrains
-
-.idea/
+*.iws
+out/
 *.iml
+.gradle/
+output/
+bin/
+libs/
 
-### eclipse
-
-.settings/
-
-# launch configurations
-*.launch
-
-# project description
+.classpath
 .project
-
-### vscode
-
-.vscode/
-.history/
-*.code-workspace
+.idea/
+classes/
+.metadata
+.vscode
+.settings
+*.launch

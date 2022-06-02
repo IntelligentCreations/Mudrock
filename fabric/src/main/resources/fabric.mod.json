@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "mudrock",
+  "version": "${version}",
+  "name": "Mudrock",
+  "description": "Elegant library for specific projects of Intelligent Creations",
+  "authors": [
+    "pkstDev"
+  ],
+  "license": "MIT License",
+  "icon": "assets/mudrock/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.intelligentcreations.mudrock.fabric.MudrockFabric"
+    ],
+    "client": [
+      "dev.intelligentcreations.mudrock.fabric.MudrockClientFabric"
+    ]
+  },
+  "mixins": [
+    "mudrock-fabric.mixins.json"
+  ],
+  "depends": {
+    "fabric": "*",
+    "minecraft": ">=1.18.2",
+    "architectury": ">=4.4.59"
+  }
+}

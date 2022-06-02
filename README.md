@@ -4,7 +4,7 @@
 
 # Mudrock
 
-Elegant Library for specific projects of Intelligent Creations
+Elegant library for specific projects of Intelligent Creations
 
 [![Release](https://img.shields.io/github/v/release/IntelligentCreations/Mudrock?style=for-the-badge&include_prereleases&sort=semver)][releases]
 
@@ -12,13 +12,13 @@ Elegant Library for specific projects of Intelligent Creations
 
 Mudrock is a simple library used by Intelligent Creations.
 
-It is built on the [Fabric][fabric] mod loader and is available for modern
+It is built on the [Fabric][fabric] and [Forge][forge] mod loader and is available for modern
 versions of [Minecraft][minecraft] Java Edition.
 
 ## Features
 
-* A simple registry system for creating multiple simple items and blocks.
-* Basic event listeners. ~~*We like Mixin, but the less Mixin, the better, right?*~~
+* A simple registry system for creating multiple simple items and blocks. **(WIP in Architectury versions)**
+* Basic event listeners. They work as intermediaries between Forge and Fabric. ~~*We like Mixin, but the less Mixin, the better, right?*~~
 
 ## Contributing
 
@@ -36,6 +36,7 @@ Mudrock is open-sourced software licenced under the [MIT license][license].
 
 [contributing]: .github/CONTRIBUTING.md
 [fabric]: https://fabricmc.net/
+[forge]: https://www.minecraftforge.net/
 [license]: LICENSE.txt
 [minecraft]: https://minecraft.net/
 [releases]: https://github.com/IntelligentCreations/Mudrock/releases
