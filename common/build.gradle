@@ -6,6 +6,8 @@ loom {
     // accessWidenerPath = file("src/main/resources/examplemod.accesswidener")
 }
 
+archivesBaseName = rootProject.archives_base_name + "-common"
+
 dependencies {
     // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
     // Do NOT use other classes from fabric loader
@@ -17,13 +19,22 @@ dependencies {
 publishing {
     publications {
         mavenCommon(MavenPublication) {
-            artifactId = rootProject.archives_base_name
+            artifactId = archivesBaseName
             from components.java
         }
     }
 
     // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
     repositories {
-        // Add repositories to publish to here.
+        maven {
+            name = "cloudsmith"
+            url = "https://maven.cloudsmith.io/pkstdev/mudrock/"
+            credentials {
+                def envUsername = System.getenv("CLOUDSMITH_USER")
+                def envPassword = System.getenv("CLOUDSMITH_KEY")
+                username = envUsername == null ? findProperty("CLOUDSMITH_USER") : envUsername
+                password = envPassword == null ? findProperty("CLOUDSMITH_KEY") : envPassword
+            }
+        }
     }
 }

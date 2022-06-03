@@ -11,6 +11,8 @@ loom {
     // accessWidenerPath = project(":common").loom.accessWidenerPath
 }
 
+archivesBaseName = rootProject.archives_base_name + "-fabric"
+
 configurations {
     common
     shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
@@ -70,13 +72,22 @@ components.java {
 publishing {
     publications {
         mavenFabric(MavenPublication) {
-            artifactId = rootProject.archives_base_name + "-" + project.name
+            artifactId = archivesBaseName
             from components.java
         }
     }
 
     // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
     repositories {
-        // Add repositories to publish to here.
+        maven {
+            name = "cloudsmith"
+            url = "https://maven.cloudsmith.io/pkstdev/mudrock/"
+            credentials {
+                def envUsername = System.getenv("CLOUDSMITH_USER")
+                def envPassword = System.getenv("CLOUDSMITH_KEY")
+                username = envUsername == null ? findProperty("CLOUDSMITH_USER") : envUsername
+                password = envPassword == null ? findProperty("CLOUDSMITH_KEY") : envPassword
+            }
+        }
     }
 }
